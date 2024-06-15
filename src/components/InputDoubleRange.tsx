@@ -62,7 +62,7 @@ export const InputRangeDouble: React.FC<Props> = ({
       setPercentMin((positionLeftRef.current * 100) / fullPercent);
     }
   };
-  const handleMouseUp = (event: React.MouseEvent) => {
+  const handleMouseUp = (_: React.MouseEvent) => {
     dragEndXLeftRef.current = positionLeftRef.current;
     window.removeEventListener("mousemove", handleMouseMove as any);
     window.removeEventListener("mouseup", handleMouseUp as any);
@@ -103,7 +103,7 @@ export const InputRangeDouble: React.FC<Props> = ({
       setPercentMin((positionLeftRef.current * 100) / fullPercent);
     }
   };
-  const handleTouchEndLeft = (event: React.TouchEvent) => {
+  const handleTouchEndLeft = (_: React.TouchEvent) => {
     dragEndXLeftRef.current = positionLeftRef.current;
     window.removeEventListener("touchmove", handleTouchMoveLeft as any);
     window.removeEventListener("touchup", handleTouchEndLeft as any);
@@ -148,7 +148,7 @@ export const InputRangeDouble: React.FC<Props> = ({
       setPercentMax(100 - (positionRightRef.current * 100 * -1) / fullPercent);
     }
   };
-  const handleMouseUpRight = (event: React.MouseEvent) => {
+  const handleMouseUpRight = (_: React.MouseEvent) => {
     dragEndXRightRef.current = positionRightRef.current;
     window.removeEventListener("mousemove", handleMouseMoveRight as any);
     window.removeEventListener("mouseup", handleMouseUpRight as any);
@@ -189,7 +189,7 @@ export const InputRangeDouble: React.FC<Props> = ({
       setPercentMax(100 - (positionRightRef.current * 100 * -1) / fullPercent);
     }
   };
-  const handleTouchEndRight = (event: React.TouchEvent) => {
+  const handleTouchEndRight = (_: React.TouchEvent) => {
     dragEndXRightRef.current = positionRightRef.current;
     window.removeEventListener("touchmove", handleTouchMoveRight as any);
     window.removeEventListener("touchup", handleTouchEndRight as any);

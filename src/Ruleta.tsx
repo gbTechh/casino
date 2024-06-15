@@ -163,7 +163,7 @@ export const Ruleta = () => {
         onKeyDown={(e) => manejarKeyPress(e)}
       />
       <div className="card">
-        {Array.from({ length: NUMBERS }).map((e, i) => (
+        {Array.from({ length: NUMBERS }).map((_, i) => (
           <button
             key={i}
             onClick={() => {
@@ -185,7 +185,7 @@ export const Ruleta = () => {
       <div className="flex flex-wrap gap-3 justify-center items-center mb-10">
         {orderedHashTable.map((e: any) => (
           <button
-            onClick={(ev) => {
+            onClick={(_) => {
               selectNumbers(Number(e[0]));
             }}
             key={e[0]}
