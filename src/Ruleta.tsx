@@ -9,7 +9,10 @@ interface HashTable {
 
 
 export const Ruleta = () => {
-    const [numbers, setNumbers] = useState<number[]>([]);
+    const [numbers, setNumbers] = useState<number[]>(() => {
+      const saved = localStorage.getItem("myState");
+      return saved !== null ? JSON.parse(saved) : "";
+    });
     const [dataSelected, setDataSelected] = useState<number[]>(numbers);
     const [hashTable, setHashTable] = useState<HashTable>({});
     const [hashTableDigits, setHashTableDigits] = useState<HashTable>({});
@@ -111,19 +114,35 @@ export const Ruleta = () => {
       setNumberSelected((prev) => [...prev, ...arr]);
     };
 
+    const [numberSelecteCount, setNumberSelecteCount] = useState<number[]>([])
+    const selectNumbersCount = (n:number) => {
+      setNumberSelecteCount((prev) => [...prev, n]);
+    }
+
     const [rangeValue, setRangeValue] = useState<number>(0);
 
     useEffect(() => {
       setDataSelected(numbers.slice(0, rangeValue));
     }, [rangeValue]);
   
+    useEffect(() => {
+      // Guardar el estado en localStorage cada vez que cambie
+      localStorage.setItem("myState", JSON.stringify(numbers));
+    }, [numbers]);
 
+    const orderNumers = () => {
+      const entries = Object.entries(hashTable);
+      const sortedEntries = entries.sort((a, b) => b[1] - a[1]);
+      return sortedEntries;
+    }
+   
   return (
     <>
       <BarChart
         labels={Object.keys(hashTable)}
         values={Object.values(hashTable)}
       />
+      <button onClick={() => setNumbers([])}>Limpiar datos</button>
       <div className="flex flex-wrap gap-3 justify-center items-center my-10">
         {Object.entries(hashTable).map((e) => (
           <button
@@ -174,6 +193,7 @@ export const Ruleta = () => {
           </button>
         ))}
       </div>
+      <p className="py-2">Tactica suma</p>
       <div className="flex flex-wrap gap-3 justify-center items-center">
         {Object.entries(hashTableDigits).map((e) => (
           <div key={e[0]} className="bg-blue-900 rounded-lg p-2">
@@ -204,6 +224,34 @@ export const Ruleta = () => {
         Clear
       </button>
       <TableroRuleta data={numberSelected} />
+
+      <div>
+        <p className="py-2">Numeros más repetidos</p>
+        <div className="flex flex-wrap gap-3 justify-center items-center mb-10">
+          {orderNumers().map((e: any) => (
+            <div key={e[0]}>
+              <p className="text-red-500 text-sm">{`${e[1]}`}</p>
+              <button
+                onClick={(_) => {
+                  selectNumbersCount(Number(e[0]));
+                }}
+                className="bg-blue-900 rounded-lg p-2"
+              >
+                <span className="text-green-200 px-2">{`${e[0]}`}</span>
+              </button>
+            </div>
+          ))}
+        </div>
+        <button
+          onClick={() => {
+            setNumberSelecteCount([]);
+          }}
+          className="rounded-md bg-red-700 text-white text-sm float-start mb-2"
+        >
+          Clear
+        </button>
+        <TableroRuleta data={numberSelecteCount} />
+      </div>
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
       </p>
