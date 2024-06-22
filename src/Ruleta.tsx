@@ -11,7 +11,7 @@ interface HashTable {
 export const Ruleta = () => {
     const [numbers, setNumbers] = useState<number[]>(() => {
       const saved = localStorage.getItem("myState");
-      return saved !== null ? JSON.parse(saved) : "";
+      return saved !== null ? JSON.parse(saved) : [];
     });
     const [dataSelected, setDataSelected] = useState<number[]>(numbers);
     const [hashTable, setHashTable] = useState<HashTable>({});
