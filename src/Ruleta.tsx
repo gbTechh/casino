@@ -118,12 +118,22 @@ export const Ruleta = () => {
     const selectNumbersCount = (n:number) => {
       setNumberSelecteCount((prev) => [...prev, n]);
     }
+    const [numberMissingState, setNumberMissingState] = useState<number[]>([]);
+    const selectNumbersMissing = (n:number) => {
+      setNumberMissingState((prev) => [...prev, n]);
+    }
 
     const [rangeValue, setRangeValue] = useState<number>(0);
 
     useEffect(() => {
       setDataSelected(numbers.slice(0, rangeValue));
     }, [rangeValue]);
+    useEffect(() => {
+      setDataSelected(numbers.slice(0, rangeValue));
+    }, [numbers]);
+    useEffect(() => {
+      setRangeValue(rangeValue);
+    }, [numbers]);
   
     useEffect(() => {
       // Guardar el estado en localStorage cada vez que cambie
@@ -135,7 +145,20 @@ export const Ruleta = () => {
       const sortedEntries = entries.sort((a, b) => b[1] - a[1]);
       return sortedEntries;
     }
-   
+    
+    const missingNumers = () => {
+      const entries = Object.entries(hashTable).map(e => Number(e[0]));
+      const numSet = new Set(entries);
+
+      let missingNumbers = [];
+      for (let i = 0; i <= 36; i++) {
+        if (!numSet.has(i)) {
+          missingNumbers.push(i);
+        }
+      }
+      return missingNumbers;
+    }
+
   return (
     <>
       <BarChart
@@ -251,6 +274,40 @@ export const Ruleta = () => {
           Clear
         </button>
         <TableroRuleta data={numberSelecteCount} />
+      </div>
+
+      <div>
+        <p className="py-2">Numeros q faltan</p>
+        <div className="flex flex-wrap gap-3 justify-center items-center mb-10">
+          {missingNumers().map((e: any) => (
+            <button
+              key={e}
+              onClick={(_) => {
+                selectNumbersMissing(Number(e));
+              }}
+              className="bg-blue-900 rounded-lg p-2"
+            >
+              <span className="text-green-200 px-2">{`${e}`}</span>
+            </button>
+          ))}
+        </div>
+        <button
+          onClick={() => {
+            setNumberMissingState([]);
+          }}
+          className="rounded-md bg-red-700 text-white text-sm float-start mb-2"
+        >
+          Clear
+        </button>
+        <button
+          onClick={() => {
+            setNumberMissingState(missingNumers());
+          }}
+          className="rounded-md bg-red-700 text-white text-sm float-start mb-2"
+        >
+          Seleccionar todos
+        </button>
+        <TableroRuleta data={numberMissingState} />
       </div>
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
