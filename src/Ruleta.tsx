@@ -159,6 +159,26 @@ export const Ruleta = () => {
       return missingNumbers;
     }
 
+    const [arrClickedNumbers, setArrClickedNumbers] = useState([])
+    const clickSelectNumber = (number: number) => {
+      let arr = []
+      let nString = `${number}`
+      for (let i = 0; i <= 36; i++) {
+        let n = `${i}`
+        if(n.at(-1) === nString.at(-1)){
+          arr.push(i);
+          // setArrClickedNumbers(prev => [...prev, i])
+        }
+        if(i % number === 0){
+          arr.push(i)
+        }
+        if(sumDigits(i) === sumDigits(number)){
+          arr.push(i)
+        }
+      }
+      setArrClickedNumbers(arr);
+    }
+
   return (
     <>
       <BarChart
@@ -309,9 +329,28 @@ export const Ruleta = () => {
         </button>
         <TableroRuleta data={numberMissingState} />
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <div className="card">
+        {Array.from({ length: NUMBERS }).map((_, i) => (
+          <button
+            key={i}
+            onClick={() => {
+              clickSelectNumber(i);
+            }}
+          >
+            {i}
+          </button>
+        ))}
+      </div>
+    <button
+        onClick={() => {
+          setArrClickedNumbers([]);
+        }}
+        className="rounded-md bg-red-700 text-white text-sm float-start mb-2"
+      >
+        Clear
+      </button>
+     
+      <TableroRuleta data={arrClickedNumbers} />
     </>
   );
 }
