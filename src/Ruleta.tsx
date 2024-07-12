@@ -159,9 +159,9 @@ export const Ruleta = () => {
       return missingNumbers;
     }
 
-    const [arrClickedNumbers, setArrClickedNumbers] = useState([])
+    const [arrClickedNumbers, setArrClickedNumbers] = useState<number[]>([])
     const clickSelectNumber = (number: number) => {
-      let arr = []
+      let arr: number[] = []
       let nString = `${number}`
       for (let i = 0; i <= 36; i++) {
         let n = `${i}`
