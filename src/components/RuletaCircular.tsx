@@ -105,10 +105,10 @@ export const RouletteCircularBoard: React.FC<RouletteCircularBoardProps> = ({ ro
 
   // Dibujar la traza de los últimos números
   const drawTrace = (ctx: CanvasRenderingContext2D, width: number, height: number) => {
-    const centerX = width / 2;
-    const centerY = height / 2;
-    const radius = Math.min(width, height) / 2 - 60;
-
+    //const centerX = width / 2;
+    //const centerY = height / 2;
+    //const radius = Math.min(width, height) / 2 - 60;
+    console.log(width, height);
     if (lastPositions.length < 2) return;
 
     // Dibujar líneas conectoras
@@ -178,7 +178,7 @@ export const RouletteCircularBoard: React.FC<RouletteCircularBoardProps> = ({ ro
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const rect = canvas.getBoundingClientRect();
+    //const rect = canvas.getBoundingClientRect();
     const centerX = canvas.width / 2;
     const centerY = canvas.height / 2;
     const radius = Math.min(canvas.width, canvas.height) / 2 - 60;
