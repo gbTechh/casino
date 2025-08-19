@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { BarChart } from "./Graph";
 import { TableroRuleta } from "./TableroRuleta";
+import { RouletteCircularBoard } from "./components/RuletaCircular";
 
 const NUMBERS = 37;
 interface HashTable {
@@ -179,12 +180,19 @@ export const Ruleta = () => {
       setArrClickedNumbers(arr);
     }
 
+    const [maxNumbers, setMaxNumbers] = useState(20);
+    console.log({maxNumbers})
   return (
     <>
-      <BarChart
-        labels={Object.keys(hashTable)}
-        values={Object.values(hashTable)}
-      />
+      <RouletteCircularBoard rouletteNumbers={dataSelected} max={maxNumbers}/>
+      <input
+          type="number"
+          className="w-full"
+          min={0}
+          max={numbers.length}
+          onChange={(event) => setMaxNumbers(Number(event.target.value))}
+        />
+     
       <button onClick={() => setNumbers([])}>Limpiar datos</button>
       <div className="flex flex-wrap gap-3 justify-center items-center my-10">
         {Object.entries(hashTable).map((e) => (
@@ -216,6 +224,10 @@ export const Ruleta = () => {
         />
         <label>Max: {numbers.length}</label>
       </div>
+       <BarChart
+        labels={Object.keys(hashTable)}
+        values={Object.values(hashTable)}
+      />
       <h1>Numbers</h1>
       <label>Numero: </label>
       <input
