@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { BarChart } from "./Graph";
 import { TableroRuleta } from "./TableroRuleta";
 import { RouletteCircularBoard } from "./components/RuletaCircular";
+import { RoulettePredictor } from "./components/ALGneetico";
 
 const NUMBERS = 37;
 interface HashTable {
@@ -20,7 +21,7 @@ export const Ruleta = () => {
     const [orderedHashTable, setOrderedHashTable] = useState<{
       [k: string]: any;
     }>([]);
-
+    console.log({dataSelected});
     useEffect(() => {
       setDataSelected(numbers);
     }, [numbers]);
@@ -182,6 +183,13 @@ export const Ruleta = () => {
 
     const [maxNumbers, setMaxNumbers] = useState(20);
     console.log({maxNumbers})
+
+    const deleteNumber = (index: number) => {
+      setNumbers((prev) => prev.filter((_, i) => i !== index));
+    };
+    const editNumber = (index: number, newValue: number) => {
+      setNumbers((prev) => prev.map((num, i) => (i === index ? newValue : num)));
+    };
   return (
     <>
       <RouletteCircularBoard rouletteNumbers={dataSelected} max={maxNumbers}/>
@@ -192,42 +200,7 @@ export const Ruleta = () => {
           max={numbers.length}
           onChange={(event) => setMaxNumbers(Number(event.target.value))}
         />
-     
-      <button onClick={() => setNumbers([])}>Limpiar datos</button>
-      <div className="flex flex-wrap gap-3 justify-center items-center my-10">
-        {Object.entries(hashTable).map((e) => (
-          <button
-            key={e[0]}
-            onClick={() => handleClickDecrease(Number(e[0]))}
-            className="bg-gray-700 rounded-lg p-2"
-          >
-            <span className="text-white">{`${e[0]}: `}</span>
-            <span className="text-green-200">{e[1]}</span>
-          </button>
-        ))}
-      </div>
-      <div className="flex gap-1 flex-wrap mb-10 w-full overflow-hidden">
-        {dataSelected.map((e, i) => (
-          <span key={i} className="w-10 rounded-sm text-white bg-red-800">
-            {e}
-          </span>
-        ))}
-      </div>
-      <div>
-        <span>{rangeValue}</span>
-        <input
-          type="range"
-          className="w-full"
-          min={0}
-          max={numbers.length}
-          onChange={(event) => setRangeValue(Number(event.target.value))}
-        />
-        <label>Max: {numbers.length}</label>
-      </div>
-       <BarChart
-        labels={Object.keys(hashTable)}
-        values={Object.values(hashTable)}
-      />
+      <RoulettePredictor history={numbers}/>
       <h1>Numbers</h1>
       <label>Numero: </label>
       <input
@@ -248,6 +221,65 @@ export const Ruleta = () => {
           </button>
         ))}
       </div>
+      <button className="mt-10" onClick={() => setNumbers([])}>Limpiar datos</button>
+      <div className="flex flex-wrap gap-3 justify-center items-center my-10">
+        {Object.entries(hashTable).map((e) => (
+          <button
+            key={e[0]}
+            onClick={() => handleClickDecrease(Number(e[0]))}
+            className="bg-gray-700 rounded-lg p-2"
+          >
+            <span className="text-white">{`${e[0]}: `}</span>
+            <span className="text-green-200">{e[1]}</span>
+          </button>
+        ))}
+      </div>
+      
+      <div className="flex gap-1 flex-wrap mb-10 w-full overflow-hidden">
+        {dataSelected.map((e, i) => (
+          <>
+            <span key={i} className="w-10 rounded-sm text-white bg-red-800">
+              {e}
+               <button
+              className="bg-yellow-500 text-black px-2 rounded"
+              onClick={() => {
+                const nuevo = prompt("Editar número:", e.toString());
+                if (nuevo !== null && !isNaN(Number(nuevo))) {
+                  editNumber(i, Number(nuevo));
+                }
+              }}
+            >
+              ✏️
+            </button>
+            <button
+              className="bg-red-500 text-white px-2 rounded"
+              onClick={() => deleteNumber(i)}
+            >
+              ❌
+            </button>
+            </span>
+           
+          </>
+          
+        ))}
+      </div>
+      
+      <div>
+        <span>{rangeValue}</span>
+        <input
+          type="range"
+          className="w-full"
+          min={0}
+          max={numbers.length}
+          onChange={(event) => setRangeValue(Number(event.target.value))}
+        />
+        <label>Max: {numbers.length}</label>
+      </div>
+       <BarChart
+        labels={Object.keys(hashTable)}
+        values={Object.values(hashTable)}
+      />
+      
       <p className="py-2">Tactica suma</p>
       <div className="flex flex-wrap gap-3 justify-center items-center">
         {Object.entries(hashTableDigits).map((e) => (
