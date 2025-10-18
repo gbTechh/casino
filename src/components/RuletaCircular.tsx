@@ -140,7 +140,7 @@ export const RouletteCircularBoard: React.FC<RouletteCircularBoardProps> = ({ ro
         
         ctx.beginPath();
         ctx.arc(pos.x, pos.y, 12, 0, 2 * Math.PI);
-        ctx.fillStyle = isSelected ? 'rgba(255, 215, 0, 1)' : `rgba(150, 150, 150, ${opacity})`;
+        ctx.fillStyle = isSelected ? 'rgba(255, 215, 0, 1)' : `rgba(150, 150, 150, 1)`;
         ctx.fill();
         ctx.strokeStyle = isSelected ? '#FF0000' : '#FFFFFF';
         ctx.lineWidth = isSelected ? 3 : 1;
