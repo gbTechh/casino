@@ -91,7 +91,7 @@ export const RouletteCircularBoard: React.FC<RouletteCircularBoardProps> = ({ ro
     ctx.stroke();
   };
 
-  const drawTrace = (ctx: CanvasRenderingContext2D, width: number, height: number) => {
+  const drawTrace = (ctx: CanvasRenderingContext2D) => {
     if (lastPositions.length < 2) return;
 
     // Si hay un número seleccionado, solo mostrar sus conexiones
@@ -134,7 +134,7 @@ export const RouletteCircularBoard: React.FC<RouletteCircularBoardProps> = ({ ro
       });
 
       // Dibujar todos los puntos con menor opacidad
-      lastPositions.forEach((pos, index) => {
+      lastPositions.forEach((pos) => {
         const isSelected = pos.number === selectedNumber;
         const opacity = isSelected ? 1 : 0.3;
         
@@ -238,7 +238,7 @@ export const RouletteCircularBoard: React.FC<RouletteCircularBoardProps> = ({ ro
     canvas.height = 600;
 
     drawBoard(ctx, canvas.width, canvas.height);
-    drawTrace(ctx, canvas.width, canvas.height);
+    drawTrace(ctx);
   }, [lastPositions, selectedNumber]);
 
   const getMovementStats = () => {
