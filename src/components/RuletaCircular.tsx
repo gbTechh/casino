@@ -136,11 +136,11 @@ export const RouletteCircularBoard: React.FC<RouletteCircularBoardProps> = ({ ro
       // Dibujar todos los puntos con menor opacidad
       lastPositions.forEach((pos) => {
         const isSelected = pos.number === selectedNumber;
-        const opacity = isSelected ? 1 : 0.3;
+        const opacity = isSelected ? 1 : 0.9;
         
         ctx.beginPath();
         ctx.arc(pos.x, pos.y, 12, 0, 2 * Math.PI);
-        ctx.fillStyle = isSelected ? 'rgba(255, 215, 0, 1)' : `rgba(150, 150, 150, 1)`;
+        ctx.fillStyle = isSelected ? 'rgba(255, 215, 0, 1)' : `rgba(150, 150, 150, ${opacity})`;
         ctx.fill();
         ctx.strokeStyle = isSelected ? '#FF0000' : '#FFFFFF';
         ctx.lineWidth = isSelected ? 3 : 1;
@@ -172,7 +172,7 @@ export const RouletteCircularBoard: React.FC<RouletteCircularBoardProps> = ({ ro
       ctx.setLineDash([]);
 
       lastPositions.forEach((pos, index) => {
-        const opacity = 1 - (index * 0.05);
+        const opacity = 1 - (index * 0.04);
         
         ctx.beginPath();
         ctx.arc(pos.x, pos.y, 12, 0, 2 * Math.PI);
