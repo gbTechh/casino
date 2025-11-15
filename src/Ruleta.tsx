@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { BarChart } from "./Graph";
 import { TableroRuleta } from "./TableroRuleta";
 import { RouletteCircularBoard } from "./components/RuletaCircular";
-import { RoulettePredictor } from "./components/ALGneetico";
+import { hybridPredictor } from "./alg/ewma";
+
 
 const NUMBERS = 37;
 interface HashTable {
@@ -108,6 +109,7 @@ export const Ruleta = () => {
     };
 
     const [numberSelected, setNumberSelected] = useState<number[]>([]);
+    const [predictorRange, setPredictorRange] = useState<number>(15);
     const selectNumbers = (n: number) => {
       let arr = [];
       for (let i = 0; i <= 36; i++) {
@@ -163,10 +165,10 @@ export const Ruleta = () => {
 
     const [arrClickedNumbers, setArrClickedNumbers] = useState<number[]>([])
     const clickSelectNumber = (number: number) => {
-      let arr: number[] = []
-      let nString = `${number}`
+      const arr: number[] = []
+      const nString = `${number}`
       for (let i = 0; i <= 36; i++) {
-        let n = `${i}`
+        const n = `${i}`
         if(n.at(-1) === nString.at(-1)){
           arr.push(i);
           // setArrClickedNumbers(prev => [...prev, i])
@@ -190,7 +192,14 @@ export const Ruleta = () => {
     const editNumber = (index: number, newValue: number) => {
       setNumbers((prev) => prev.map((num, i) => (i === index ? newValue : num)));
     };
-  return (
+    const [probs, setProbs] = useState(dataSelected);
+
+    useEffect(() => {
+      setProbs(hybridPredictor(dataSelected));
+    }, [dataSelected])
+    
+    console.log({probs})
+    return (
     <>
       <RouletteCircularBoard rouletteNumbers={dataSelected} max={maxNumbers}/>
       <input
@@ -200,7 +209,7 @@ export const Ruleta = () => {
           max={numbers.length}
           onChange={(event) => setMaxNumbers(Number(event.target.value))}
         />
-      <RoulettePredictor history={numbers}/>
+      {/* <RoulettePredictor history={numbers}/> */}
       <h1>Numbers</h1>
       <label>Numero: </label>
       <input
@@ -234,7 +243,47 @@ export const Ruleta = () => {
           </button>
         ))}
       </div>
-      
+       <div>
+        <span>{rangeValue}</span>
+        <input
+          type="range"
+          className="w-full"
+          min={0}
+          max={numbers.length}
+          onChange={(event) => setRangeValue(Number(event.target.value))}
+        />
+        <label>Max: {numbers.length}</label>
+      </div>
+      <div className="mb-4">
+        <h1>Predictor :</h1>
+         <input
+          type="number"
+          className="w-28"
+          onChange={(event) => setPredictorRange(Number(event.target.value))}
+        />
+          <div className="flex flex-wrap gap-1">
+            {probs
+              .map((p, i) => ({ num: i, prob: p }))    // convertimos a objetos
+              .sort((a, b) => b.prob - a.prob)         // ordenamos desc
+              .map(({ num, prob }) => (
+                <p key={num} className="p-1 border-[1px] border-violet-500">
+                  {num}:{" "}
+                  <span className="p-1 bg-yellow-300 text-black">
+                    {(prob * 100).toFixed(2)}%
+                  </span>
+                </p>
+              ))}
+          </div>
+         {(() => {
+            const topNumeros = probs
+              .map((p, i) => ({ num: i, prob: p }))
+              .sort((a, b) => b.prob - a.prob)
+              .slice(0, predictorRange)
+              .map((x) => x.num);
+
+            return <TableroRuleta data={topNumeros} />;
+          })()}
+      </div>
       <div className="flex gap-1 flex-wrap mb-10 w-full overflow-hidden">
         {dataSelected.map((e, i) => (
           <>
@@ -264,17 +313,7 @@ export const Ruleta = () => {
         ))}
       </div>
       
-      <div>
-        <span>{rangeValue}</span>
-        <input
-          type="range"
-          className="w-full"
-          min={0}
-          max={numbers.length}
-          onChange={(event) => setRangeValue(Number(event.target.value))}
-        />
-        <label>Max: {numbers.length}</label>
-      </div>
+     
        <BarChart
         labels={Object.keys(hashTable)}
         values={Object.values(hashTable)}
